@@ -1,17 +1,14 @@
+// Favorite count
+let favCount = 0;
+const favCountElement = document.getElementById("favCount");
+const hearts = document.querySelectorAll(".heart-icon");
 
-
-let favCount=0;
-const favCountElement=document.getElementById("favCount");
-const hearts=document.querySelectorAll(".heart-icon");
- 
-for(heart of hearts){
-    heart.addEventListener("click",function(){
-        favCount++;
-        favCountElement.textContent=favCount
-    })
+for (const heart of hearts) {
+  heart.addEventListener("click", function () {
+    favCount++;
+    favCountElement.textContent = favCount;
+  });
 }
-
-// index.js
 
 // Coins
 const coinEl = document.getElementById("coinCount");
@@ -20,7 +17,7 @@ let coins = 100;
 // Call History
 const historyList = document.getElementById("historyList");
 
-// Call Button
+// Call Buttons
 const callButtons = document.querySelectorAll(".call-btn");
 
 for (const btn of callButtons) {
@@ -35,19 +32,44 @@ for (const btn of callButtons) {
     coins -= 20;
     coinEl.textContent = coins;
 
-    // Get Service details
+    // Get service details
     const cardBody = btn.closest(".card-body");
-    const serviceName = cardBody.querySelector(".card-title").textContent;
-    const serviceNumber = cardBody.querySelector("h2.font-bold.text-xl").textContent;
-    const serviceIcon = cardBody.querySelector("button img").getAttribute("src");
+    const serviceName = cardBody.querySelector(".card-title").innerText;
+    const serviceNumber = cardBody.querySelector(
+      "h2.font-bold.text-xl"
+    ).innerText;
 
-    // Alert with Icon (using emoji 📞 as demo)
+    // Alert
     alert(`📞 Calling ${serviceName} ${serviceNumber}`);
 
-    // Add to Call History
+    // Current time in 12-hour format with seconds
+    const now = new Date();
+    const hours = now.getHours() % 12 || 12;
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+    const ampm = now.getHours() >= 12 ? "PM" : "AM";
+    const time12 = `${hours}:${minutes}:${seconds} ${ampm}`;
+
+    // Create Call History item (flex: name/number left, time right)
     const historyItem = document.createElement("div");
-    historyItem.className = "p-2 bg-gray-100 rounded shadow-sm font-semibold text-gray-800";
-    historyItem.innerHTML = `${serviceName} <br>  ${serviceNumber}`;
+    historyItem.className =
+      "flex justify-between items-center p-2 bg-gray-100 rounded shadow-sm font-semibold text-gray-800";
+
+    // Left side: service name + number stacked
+    const left = document.createElement("div");
+    left.innerHTML = `${serviceName}<br>${serviceNumber}`;
+    left.className = "text-left";
+
+    // Right side: time
+    const right = document.createElement("div");
+    right.className = "text-sm text-gray-600";
+    right.textContent = time12;
+
+    // Append left and right to history item
+    historyItem.appendChild(left);
+    historyItem.appendChild(right);
+
+    // Prepend to history list
     historyList.prepend(historyItem);
   });
 }
@@ -58,4 +80,29 @@ clearBtn.addEventListener("click", () => {
   historyList.innerHTML = "";
 });
 
+// Copy Count
+const copyCountEl = document.getElementById("copyCount");
+let copyCount = 0;
 
+// Copy Buttons
+const copyButtons = document.querySelectorAll(".copy-btn");
+
+for (const btn of copyButtons) {
+  btn.addEventListener("click", () => {
+    // Get number
+    const cardBody = btn.closest(".card-body");
+    const serviceNumber = cardBody.querySelector(
+      "h2.font-bold.text-xl"
+    ).innerText;
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(serviceNumber).then(() => {
+      // Increase counter
+      copyCount++;
+      copyCountEl.textContent = copyCount;
+
+      // Alert
+      alert(`📋 Copied Hotline Number:\n${serviceNumber}`);
+    });
+  });
+}
