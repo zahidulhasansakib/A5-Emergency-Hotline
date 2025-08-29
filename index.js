@@ -30,7 +30,8 @@ for (const btn of callButtons) {
 
     // Deduct coins
     coins -= 20;
-    coinEl.textContent = coins;
+    coinEl.innerHTML = `${coins} <img src="./assets/coin.png" alt="" class="w-6" />`;
+
 
     // Get service details
     const cardBody = btn.closest(".card-body");
